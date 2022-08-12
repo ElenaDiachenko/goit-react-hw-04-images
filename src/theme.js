@@ -6,10 +6,10 @@ export const theme = {
     background: '#fff',
     primary: '#07c',
     secondary: '#05a',
-    accent: '#609',
+    accent: '#3f51b5',
     muted: '#f6f6f6',
   },
-  space: [0, 2, 4, 8, 16, 32, 64, 128, 256],
+  space: [0, 2, 4, 12, 16, 24, 32, 48, 64, 128, 256],
   fonts: {
     body: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
   },
@@ -17,7 +17,7 @@ export const theme = {
     xs: '12px',
     s: '14px',
     m: '16px',
-    l: '32px',
+    l: '20px',
     xl: '64px',
   },
   fontWeights: {
