@@ -9,7 +9,7 @@ import { AppContainer } from './App.styled';
 
 export class App extends Component {
   state = {
-    value: '',
+    query: '',
     page: 1,
     images: [],
     isLoading: false,
@@ -18,16 +18,16 @@ export class App extends Component {
   async componentDidUpdate(_, prevState) {
     try {
       if (
-        prevState.value !== this.state.value ||
+        prevState.query !== this.state.query ||
         prevState.page !== this.state.page
       ) {
         this.setState({ isLoading: true });
-        const images = await fetchImages(this.state.value, this.state.page);
+        const images = await fetchImages(this.state.query, this.state.page);
 
         this.setState(prevState => ({
           images: [...prevState.images, ...images.hits],
           isLoading: false,
-          // page: this.prevState.page + 1,
+          page: this.state.page,
         }));
       }
     } catch (error) {
@@ -36,8 +36,17 @@ export class App extends Component {
     }
   }
 
-  getValueFormSubmit = value => {
-    this.setState(value);
+  loadMore = async () => {
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+    }));
+  };
+  getValueFormSubmit = ({ value }) => {
+    this.setState({
+      page: 1,
+      query: value,
+      images: [],
+    });
   };
 
   render() {
@@ -59,7 +68,9 @@ export class App extends Component {
         ) : (
           <ImageGallery images={this.state.images} />
         )}
-
+        <button type="button" onClick={this.loadMore}>
+          Load More
+        </button>
         <ToastContainer />
       </AppContainer>
     );
