@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Searchbar } from './Searchbar/Searchbar';
+import { Button } from './Button/Button';
 import { fetchImages } from 'services/API';
 import { AppContainer } from './App.styled';
 
@@ -50,27 +51,20 @@ export class App extends Component {
   };
 
   render() {
-    // console.log()
-    const { getValueFormSubmit } = this;
-    // const { isLoading } = this.setState;
+    const { isLoading, error, images } = this.state;
+    const { getValueFormSubmit, loadMore } = this;
     return (
       <AppContainer>
         <GlobalStyle />
-        {this.state.error && (
+        {error && (
           <p>
             Ой! Что-то пошло не так. Перезагрузите страницу и попробуйте еще
             раз.E
           </p>
         )}
         <Searchbar onSubmit={getValueFormSubmit} />
-        {this.state.isLoading ? (
-          'Загружаем материалы'
-        ) : (
-          <ImageGallery images={this.state.images} />
-        )}
-        <button type="button" onClick={this.loadMore}>
-          Load More
-        </button>
+        {isLoading ? 'Загружаем материалы' : <ImageGallery images={images} />}
+        {images.length && !isLoading && <Button onClick={loadMore} />}
         <ToastContainer />
       </AppContainer>
     );
