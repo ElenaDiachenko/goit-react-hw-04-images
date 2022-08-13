@@ -4,28 +4,33 @@ import { HiSearch } from 'react-icons/hi';
 import { HeaderContainer, SearchForm, Input, Button } from './Searchbar.styled';
 
 export const Searchbar = ({ onSubmit }) => {
-  const handleSubmit = (values, { resetForm }) => {
-    // console.log(values);
-    onSubmit(values);
-    resetForm();
+  const handleSubmit = async (values, actions) => {
+    await onSubmit(values);
+    actions.setSubmitting(false);
+    actions.resetForm();
   };
 
   return (
     <HeaderContainer>
       <Formik initialValues={{ value: '' }} onSubmit={handleSubmit}>
-        <SearchForm>
-          <Button type="submit">
-            <HiSearch size={25} />
-          </Button>
+        {({ isSubmitting }) => {
+          // console.log(isSubmitting);
+          return (
+            <SearchForm>
+              <Button type="submit" disabled={isSubmitting}>
+                <HiSearch size={25} />
+              </Button>
 
-          <Input
-            name="value"
-            type="text"
-            autoComplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-          />
-        </SearchForm>
+              <Input
+                name="value"
+                type="text"
+                autoComplete="off"
+                autoFocus
+                placeholder="Search images and photos"
+              />
+            </SearchForm>
+          );
+        }}
       </Formik>
     </HeaderContainer>
   );
