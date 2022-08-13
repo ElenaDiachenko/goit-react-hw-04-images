@@ -1,10 +1,11 @@
 import { Component } from 'react';
 import { GlobalStyle } from './GlobalStyle';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Searchbar } from './Searchbar/Searchbar';
 import { Button } from './Button/Button';
+import { Loader } from './Loader/Loader';
 import { fetchImages } from 'services/API';
 import { AppContainer } from './App.styled';
 
@@ -17,18 +18,17 @@ export class App extends Component {
     error: false,
   };
   async componentDidUpdate(_, prevState) {
+    const { query, page } = this.state;
+
     try {
-      if (
-        prevState.query !== this.state.query ||
-        prevState.page !== this.state.page
-      ) {
+      if (prevState.query !== query || prevState.page !== page) {
         this.setState({ isLoading: true });
-        const images = await fetchImages(this.state.query, this.state.page);
+        const images = await fetchImages(query, page);
 
         this.setState(prevState => ({
           images: [...prevState.images, ...images.hits],
           isLoading: false,
-          page: this.state.page,
+          page,
         }));
       }
     } catch (error) {
@@ -42,7 +42,12 @@ export class App extends Component {
       page: prevState.page + 1,
     }));
   };
+
   getValueFormSubmit = ({ value }) => {
+    if (value.trim() === '') {
+      toast.error('Write a search');
+      return;
+    }
     this.setState({
       page: 1,
       query: value,
@@ -63,7 +68,7 @@ export class App extends Component {
           </p>
         )}
         <Searchbar onSubmit={getValueFormSubmit} />
-        {isLoading ? 'Загружаем материалы' : <ImageGallery images={images} />}
+        {isLoading ? <Loader /> : <ImageGallery images={images} />}
         {images.length && !isLoading && <Button onClick={loadMore} />}
         <ToastContainer />
       </AppContainer>
