@@ -15,28 +15,33 @@ export class App extends Component {
     page: 1,
     totalImages: null,
     images: [],
-    isLoading: false,
+    // isLoading: false,
     error: false,
+    status: 'idle',
   };
   async componentDidUpdate(_, prevState) {
-    const { query, page, totalImages } = this.state;
+    const { query, page } = this.state;
 
     try {
       if (prevState.query !== query || prevState.page !== page) {
-        this.setState({ isLoading: true });
+        this.setState({ status: 'pending' });
         const images = await fetchImages(query, page);
 
-        if (totalImages === 0) {
-          this.setState({ totalImages: images.totalHits });
+        if (images.totalHits === 0) {
+          this.setState({ status: 'rejected' });
+          return;
         }
+
         this.setState(prevState => ({
           images: [...prevState.images, ...images.hits],
           isLoading: false,
+          status: 'resolved',
+          totalImages: images.totalHits,
           page,
         }));
       }
     } catch (error) {
-      this.setState({ error: true, isLoading: false });
+      this.setState({ error: true, status: 'rejected' });
       toast.error('Oop! Something went wrong! Try again later!');
     }
   }
@@ -48,10 +53,6 @@ export class App extends Component {
   };
 
   getValueFormSubmit = ({ value }) => {
-    if (value.trim() === '') {
-      toast.error('Write a search');
-      return;
-    }
     this.setState({
       page: 1,
       query: value,
@@ -60,21 +61,33 @@ export class App extends Component {
   };
 
   render() {
-    const { isLoading, images, query, totalImages } = this.state;
+    const { images, totalImages, status } = this.state;
     const { getValueFormSubmit, loadMore } = this;
 
     return (
       <AppContainer>
         <GlobalStyle />
         <Searchbar onSubmit={getValueFormSubmit} />
-        {!query && <FoundMessage>Ведитe запрос</FoundMessage>}
-        {isLoading ? <Loader /> : <ImageGallery images={images} />}
-        {images.length > 0 && !isLoading && totalImages - images.length && (
+        {status === 'idle' && (
+          <FoundMessage>Enter a search query.</FoundMessage>
+        )}
+        {status === 'pending' && <Loader />}
+        {status === 'rejected' && (
+          <FoundMessage>
+            "Sorry, there are no images matching your search query. Please try
+            again.
+          </FoundMessage>
+        )}
+        {status === 'resolved' && <ImageGallery images={images} />}
+        {status === 'resolved' && totalImages - images.length > 0 ? (
           <Button onClick={loadMore} />
-        )}
-        {images.length === 0 && query && !isLoading && (
-          <FoundMessage>Such image theme not found</FoundMessage>
-        )}
+        ) : null}
+        {status === 'resolved' && totalImages - images.length <= 0 ? (
+          <FoundMessage>
+            We're sorry, but you've reached the end of search results.
+          </FoundMessage>
+        ) : null}
+
         <ToastContainer />
       </AppContainer>
     );
