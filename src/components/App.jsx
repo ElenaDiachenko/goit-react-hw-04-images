@@ -44,6 +44,11 @@ export class App extends Component {
     } catch (error) {
       this.setState({ error: true, status: 'rejected' });
       toast.warning('Oop! Something went wrong! Try again later!');
+    } finally {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: 'smooth',
+      });
     }
   }
 
