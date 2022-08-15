@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Modal } from '../Modal/Modal';
 import { Image } from './ImageGalleryItem.styled';
 
@@ -27,3 +28,6 @@ export class ImageGalleryItem extends Component {
     );
   }
 }
+ImageGalleryItem.propTypes = {
+  image: PropTypes.object.isRequired,
+};

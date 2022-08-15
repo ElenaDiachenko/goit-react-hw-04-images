@@ -1,4 +1,4 @@
-// import { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 import { HiSearch } from 'react-icons/hi';
 import { HeaderContainer, SearchForm, Input, Button } from './Searchbar.styled';
@@ -34,4 +34,8 @@ export const Searchbar = ({ onSubmit }) => {
       </Formik>
     </HeaderContainer>
   );
+};
+
+Searchbar.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
 };

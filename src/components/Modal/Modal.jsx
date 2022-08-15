@@ -1,5 +1,5 @@
 import { Overlay, ModalWindow } from './Modal.styled';
-// import { Component } from 'react';
+import PropTypes from 'prop-types';
 import { createPortal } from 'react-dom';
 const modalRoot = document.getElementById('modal-root');
 
@@ -27,4 +27,10 @@ export const Modal = ({ onClose, src, alt }) => {
     </Overlay>,
     modalRoot
   );
+};
+
+Modal.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  src: PropTypes.string.isRequired,
+  alt: PropTypes.string.isRequired,
 };
