@@ -2,20 +2,20 @@ import styled from 'styled-components';
 
 export const ButtonLoad = styled.button`
   max-width: 150px;
-  margin: 0 auto;
+  margin: ${p => p.theme.space[1]}px auto;
   padding: 8px 16px;
-  border-radius: 2px;
-  background-color: #3f51b5;
+  border-radius: ${p => p.theme.borders.none};
+  background-color: ${p => p.theme.colors.secondary};
   transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
   text-align: center;
   display: inline-block;
-  color: #fff;
-  border: 0;
+  color: ${p => p.theme.colors.white};
+  border: ${p => p.theme.space[1]}px;
   text-decoration: none;
   cursor: pointer;
   font-family: inherit;
   font-size: 18px;
-  line-height: 24px;
+  line-height: ${p => p.theme.space[6]}px;
   font-style: normal;
   font-weight: 500;
   min-width: 180px;

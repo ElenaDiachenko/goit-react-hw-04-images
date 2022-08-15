@@ -15,7 +15,6 @@ export class App extends Component {
     page: 1,
     totalImages: null,
     images: [],
-    // isLoading: false,
     error: false,
     status: 'idle',
   };
@@ -28,13 +27,15 @@ export class App extends Component {
         const images = await fetchImages(query, page);
 
         if (images.totalHits === 0) {
-          this.setState({ status: 'rejected' });
+          this.setState({ status: 'idle' });
+          toast.warning(
+            'Sorry, there are no images matching your search query. Please, try again'
+          );
           return;
         }
 
         this.setState(prevState => ({
           images: [...prevState.images, ...images.hits],
-          isLoading: false,
           status: 'resolved',
           totalImages: images.totalHits,
           page,
@@ -42,7 +43,7 @@ export class App extends Component {
       }
     } catch (error) {
       this.setState({ error: true, status: 'rejected' });
-      toast.error('Oop! Something went wrong! Try again later!');
+      toast.warning('Oop! Something went wrong! Try again later!');
     }
   }
 
@@ -53,6 +54,12 @@ export class App extends Component {
   };
 
   getValueFormSubmit = ({ value }) => {
+    if (value.trim().length === 0) {
+      toast.warning(
+        'Sorry, there are no images matching your search query. Please, try again'
+      );
+      return;
+    }
     this.setState({
       page: 1,
       query: value,
@@ -69,7 +76,7 @@ export class App extends Component {
         <GlobalStyle />
         <Searchbar onSubmit={getValueFormSubmit} />
         {status === 'idle' && (
-          <FoundMessage>Enter a search query.</FoundMessage>
+          <FoundMessage>Please, enter a search query.</FoundMessage>
         )}
         {status === 'pending' && <Loader />}
         {status === 'rejected' && (
@@ -88,7 +95,11 @@ export class App extends Component {
           </FoundMessage>
         ) : null}
 
-        <ToastContainer />
+        <ToastContainer
+          autoClose={3000}
+          theme={'colored'}
+          hideProgressBar={false}
+        />
       </AppContainer>
     );
   }

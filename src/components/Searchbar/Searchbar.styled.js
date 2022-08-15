@@ -9,7 +9,7 @@ export const HeaderContainer = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: ${p => p.theme.space[9]}px;
+  min-height: ${p => p.theme.space[8]}px;
   padding-right: ${p => p.theme.space[6]}px;
   padding-left: ${p => p.theme.space[6]}px;
   padding-top: ${p => p.theme.space[4]}px;
@@ -46,7 +46,7 @@ export const Button = styled.button`
   width: 52px;
   height: 52px;
   border: ${p => p.theme.borders.none};
-  opacity: 0.6;
+  opacity: 0.8;
   transition: opacity 250ms cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   outline: none;

@@ -1,10 +1,30 @@
 import { Overlay, ModalWindow } from './Modal.styled';
-export const Modal = () => {
-  return (
-    <Overlay>
+// import { Component } from 'react';
+import { createPortal } from 'react-dom';
+const modalRoot = document.getElementById('modal-root');
+
+export const Modal = ({ onClose, src, alt }) => {
+  window.addEventListener('keydown', handleKeyDown);
+
+  function handleKeyDown(e) {
+    if (e.code === 'Escape') {
+      onClose();
+      window.removeEventListener('keydown', handleKeyDown);
+    }
+  }
+
+  const handleBackdropClick = e => {
+    if (e.currentTarget === e.target) {
+      onClose();
+    }
+  };
+
+  return createPortal(
+    <Overlay onClick={handleBackdropClick}>
       <ModalWindow>
-        <img src="" alt="" />
+        <img src={src} alt={alt} />
       </ModalWindow>
-    </Overlay>
+    </Overlay>,
+    modalRoot
   );
 };
